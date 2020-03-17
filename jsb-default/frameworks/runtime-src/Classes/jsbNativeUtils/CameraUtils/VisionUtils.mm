@@ -42,7 +42,9 @@
 
 - (VNDetectFaceRectanglesRequest *)getDetectFaceRequest {
     if (!self.detectFaceRequest) {
-        self.detectFaceRequest = [[VNDetectFaceRectanglesRequest alloc] init];
+        self.detectFaceRequest = [[VNDetectFaceRectanglesRequest alloc] initWithCompletionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
+            NSLog(@"获取到的人脸特征数据 count: %d",request.results.count);
+        }];
     }
     return self.detectFaceRequest;
 }

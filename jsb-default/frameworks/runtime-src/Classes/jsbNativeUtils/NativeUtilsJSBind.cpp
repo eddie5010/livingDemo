@@ -100,6 +100,7 @@ public:
     }
     
     void cameraUpdate(){
+        
 //        printf("JS端请求获取摄像机数据： %lu",m_cameraQueue.size());
         if(m_cameraQueue.size() > 0){
             CameraData cd =std::move(m_cameraQueue.front());

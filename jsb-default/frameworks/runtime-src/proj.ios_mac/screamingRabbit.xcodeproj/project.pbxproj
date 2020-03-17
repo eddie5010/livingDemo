@@ -320,14 +320,14 @@
 			children = (
 				2BA0D63A24205B58007C6BDA /* AudioUtils.h */,
 				2BA0D63524205B58007C6BDA /* AudioUtils.mm */,
-				2BA0D63624205B58007C6BDA /* NativeUtilsJSBind.h */,
-				2BA0D63724205B58007C6BDA /* iOSNativeUtilsHelper.mm */,
-				2BA0D63824205B58007C6BDA /* iOSNativeUtilsHelper.h */,
 				2BA0D63924205B58007C6BDA /* CalendarUtils.h */,
-				2BA0D63B24205B58007C6BDA /* CameraUtils */,
-				2BA0D64224205B58007C6BDA /* NativeUtilsKeyWord.h */,
 				2BA0D64324205B58007C6BDA /* CalendarUtils.mm */,
+				2BA0D63B24205B58007C6BDA /* CameraUtils */,
+				2BA0D63824205B58007C6BDA /* iOSNativeUtilsHelper.h */,
+				2BA0D63724205B58007C6BDA /* iOSNativeUtilsHelper.mm */,
 				2BA0D64424205B58007C6BDA /* NativeUtilsJSBind.cpp */,
+				2BA0D63624205B58007C6BDA /* NativeUtilsJSBind.h */,
+				2BA0D64224205B58007C6BDA /* NativeUtilsKeyWord.h */,
 			);
 			path = jsbNativeUtils;
 			sourceTree = "<group>";
@@ -785,7 +785,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../cocos2d-x/external/ios/libs";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -820,7 +820,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../cocos2d-x/external/ios/libs";
 				OTHER_LDFLAGS = (
 					"-ObjC",
