@@ -54,11 +54,11 @@ typedef void (^VisionDatasBlock)(NSArray *datas);
 @interface VisionUtils : VisionModel
 
 @property (nonatomic, strong)VNDetectFaceRectanglesRequest *detectFaceRequest;
-@property (nonatomic, strong)VNImageRequestHandler *detectFaceRequestHandler;
+//@property (nonatomic, strong)VNImageRequestHandler *detectFaceRequestHandler;
 
 + (instancetype)sharedSingleton;
 - (VNDetectFaceRectanglesRequest *)getDetectFaceRequest;
-- (VNImageRequestHandler *)getDetectFaceRequestHandler;
+//- (VNImageRequestHandler *)getDetectFaceRequestHandler;
 
 
 
@@ -73,6 +73,29 @@ typedef void (^VisionDatasBlock)(NSArray *datas);
  * 获取鼻子中心位置信息
  */
 + (CGPoint)getNoseCenterPoint:(VNFaceLandmarkRegion2D *)noseCrest;
+
+/**
+ * 转换辅助方法
+ */
++ (CGRect)convertRect:(CGRect)rect size:(CGSize)size;
+
+
+/**
+ * NSData转CVPixelBufferRef
+ */
++ (CVPixelBufferRef)yuvPixelBufferWithData:(NSData *)dataFrame
+                                     width:(size_t)w
+                                    heigth:(size_t)h;
++ (CVPixelBufferRef) copyDataFromBuffer:(const unsigned char*)buffer
+              toYUVPixelBufferWithWidth:(size_t)w
+                                 Height:(size_t)h;
+
+/**
+ * CVPixelBufferRef转NSData
+ */
++ (NSData *)dataWithYUVPixelBuffer:(CVPixelBufferRef)pixelBuffer;
++ (void) copyDataFromYUVPixelBuffer:(CVPixelBufferRef)pixelBuffer
+                           toBuffer:(unsigned char*)buffer;
 
 @end
 

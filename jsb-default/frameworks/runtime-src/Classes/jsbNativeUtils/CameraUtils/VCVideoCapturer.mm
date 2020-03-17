@@ -324,65 +324,65 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
        fromConnection:(AVCaptureConnection *)connection
 {
     if ([self.delegate respondsToSelector:@selector(videoCaptureOutputDataCallback:)])
-       {
-           [self.delegate videoCaptureOutputDataCallback:sampleBuffer];
-       }
+    {
+        [self.delegate videoCaptureOutputDataCallback:sampleBuffer];
+    }
     
-//    @autoreleasepool {
-//        CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-//        CVPixelBufferLockBaseAddress(imageBuffer,0);
-//
-//        size_t width = CVPixelBufferGetWidth(imageBuffer);
-//        size_t height = CVPixelBufferGetHeight(imageBuffer);
-//        uint8_t *yBuffer =(uint8_t*) CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-//        size_t yPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
-//        uint8_t *cbCrBuffer = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
-//        size_t cbCrPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
-//
-//        int bytesPerPixel = 3;
-//        uint8_t *rgbBuffer =(uint8_t*) malloc(width * height * bytesPerPixel);
-//
-//        for(int y = 0; y < height; y++) {
-//            uint8_t *rgbBufferLine = &rgbBuffer[y * width * bytesPerPixel];
-//            uint8_t *yBufferLine = &yBuffer[y * yPitch];
-//            uint8_t *cbCrBufferLine = &cbCrBuffer[(y >> 1) * cbCrPitch];
-//
-//            for(int x = 0; x < width; x++) {
-//                int16_t y = yBufferLine[x];
-//                int16_t cb = cbCrBufferLine[x & ~1] - 128;
-//                int16_t cr = cbCrBufferLine[x | 1] - 128;
-//
-//                uint8_t *rgbOutput = &rgbBufferLine[x*bytesPerPixel];
-//
-//                int16_t r = (int16_t)roundf( y + cr *  1.4 );
-//                int16_t g = (int16_t)roundf( y + cb * -0.343 + cr * -0.711 );
-//                int16_t b = (int16_t)roundf( y + cb *  1.765);
-//
-//                rgbOutput[0] = clamp(r);
-//                rgbOutput[1] = clamp(g);
-//                rgbOutput[2] = clamp(b);
-//                //            rgbOutput[3] = 0xff;
-//            }
-//        }
-//
-//
-//        /**
-//         * 检测人脸特征数据信息
-//         */
-//        VNDetectFaceRectanglesRequest *detectFaceRequest = [[VisionUtils sharedSingleton] getDetectFaceRequest];
-//            VNImageRequestHandler *detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:imageBuffer
-//                                                                                                           options:@{}];
-//            [detectFaceRequestHandler performRequests:@[detectFaceRequest]
-//                                                error:nil];
-//            /// 输出数据
-//            //        _xxblock(detectFaceRequest.results);
-//            NSLog(@"获取到的人脸特征数据为：%@", detectFaceRequest.results);
-//
-//
-//        updateCameraData(rgbBuffer, (int)width, (int)height, (long)width*height*bytesPerPixel);
-//                CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
-        
-//    }
+    //    @autoreleasepool {
+    //        CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    //        CVPixelBufferLockBaseAddress(imageBuffer,0);
+    //
+    //        size_t width = CVPixelBufferGetWidth(imageBuffer);
+    //        size_t height = CVPixelBufferGetHeight(imageBuffer);
+    //        uint8_t *yBuffer =(uint8_t*) CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
+    //        size_t yPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
+    //        uint8_t *cbCrBuffer = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
+    //        size_t cbCrPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
+    //
+    //        int bytesPerPixel = 3;
+    //        uint8_t *rgbBuffer =(uint8_t*) malloc(width * height * bytesPerPixel);
+    //
+    //        for(int y = 0; y < height; y++) {
+    //            uint8_t *rgbBufferLine = &rgbBuffer[y * width * bytesPerPixel];
+    //            uint8_t *yBufferLine = &yBuffer[y * yPitch];
+    //            uint8_t *cbCrBufferLine = &cbCrBuffer[(y >> 1) * cbCrPitch];
+    //
+    //            for(int x = 0; x < width; x++) {
+    //                int16_t y = yBufferLine[x];
+    //                int16_t cb = cbCrBufferLine[x & ~1] - 128;
+    //                int16_t cr = cbCrBufferLine[x | 1] - 128;
+    //
+    //                uint8_t *rgbOutput = &rgbBufferLine[x*bytesPerPixel];
+    //
+    //                int16_t r = (int16_t)roundf( y + cr *  1.4 );
+    //                int16_t g = (int16_t)roundf( y + cb * -0.343 + cr * -0.711 );
+    //                int16_t b = (int16_t)roundf( y + cb *  1.765);
+    //
+    //                rgbOutput[0] = clamp(r);
+    //                rgbOutput[1] = clamp(g);
+    //                rgbOutput[2] = clamp(b);
+    //                //            rgbOutput[3] = 0xff;
+    //            }
+    //        }
+    //
+    //
+    //        /**
+    //         * 检测人脸特征数据信息
+    //         */
+    //        VNDetectFaceRectanglesRequest *detectFaceRequest = [[VisionUtils sharedSingleton] getDetectFaceRequest];
+    //            VNImageRequestHandler *detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:imageBuffer
+    //                                                                                                           options:@{}];
+    //            [detectFaceRequestHandler performRequests:@[detectFaceRequest]
+    //                                                error:nil];
+    //            /// 输出数据
+    //            //        _xxblock(detectFaceRequest.results);
+    //            NSLog(@"获取到的人脸特征数据为：%@", detectFaceRequest.results);
+    //
+    //
+    //        updateCameraData(rgbBuffer, (int)width, (int)height, (long)width*height*bytesPerPixel);
+    //                CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    
+    //    }
     
     
     

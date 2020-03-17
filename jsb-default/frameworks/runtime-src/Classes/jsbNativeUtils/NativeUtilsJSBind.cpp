@@ -100,17 +100,17 @@ public:
     }
     
     void cameraUpdate(){
-//        iOSNativeUtilsHelper::cameraUpdate();
-//        return;
+        iOSNativeUtilsHelper::cameraUpdate();
+        return;
         
-        if(m_cameraQueue.size() > 0){
-            CameraData cd =std::move(m_cameraQueue.front());
-            if(_cameraCB){
-                _cameraCB(cd.pData,cd.width,cd.height,cd.length);
-            }
-            CC_SAFE_DELETE_ARRAY(cd.pData);
-            m_cameraQueue.pop();
-        }
+        //        if(m_cameraQueue.size() > 0){
+        //            CameraData cd =std::move(m_cameraQueue.front());
+        //            if(_cameraCB){
+        //                _cameraCB(cd.pData,cd.width,cd.height,cd.length);
+        //            }
+        //            CC_SAFE_DELETE_ARRAY(cd.pData);
+        //            m_cameraQueue.pop();
+        //        }
     }
     
     void openNativeCalendar(std::string lastBirth){
@@ -135,10 +135,10 @@ public:
     }
     
     void getWechatInstalledStatus(){
-//        bool isInstalled = iOSWechatHelper::isAppInstalled();
-//        if(_boolCB){
-//            _boolCB(isInstalled);
-//        }
+        //        bool isInstalled = iOSWechatHelper::isAppInstalled();
+        //        if(_boolCB){
+        //            _boolCB(isInstalled);
+        //        }
     }
     
     static void static_func() {
@@ -324,7 +324,7 @@ static bool js_NativeUtilsJSBind_setCameraCallback(se::State& s)
             s.thisObject()->attachObject(jsTarget.toObject());
             
             cobj->setCameraCallback([=](uint8_t* pData, int width, int height, int len){
-//                hasRender=true;
+                //                hasRender=true;
                 /**
                  * 子线程调用这个回调，需要这样处理
                  */
@@ -336,7 +336,7 @@ static bool js_NativeUtilsJSBind_setCameraCallback(se::State& s)
                 
                 se::ValueArray args;
                 
-//                printf("999999999999999999999\n");
+                //                printf("999999999999999999999\n");
                 //data.copy(pData, len);
                 static cocos2d::Data data;
                 data.copy(pData, len);
@@ -354,7 +354,7 @@ static bool js_NativeUtilsJSBind_setCameraCallback(se::State& s)
                 jsFunc.toObject()->call(args, target);
                 // data.clear();
                 //free(pData);
-//                hasRender=false;
+                //                hasRender=false;
                 //                });
                 
             });
@@ -558,9 +558,9 @@ bool js_register_ns_NativeUtilsJSBind(se::Object* global)
 
 void liveAudioDecibelCB(float audioDecibel) {
     staticAudioDecibel = audioDecibel;
-//    if (_numberCB) {
-//        _numberCB(audioDecibel);
-//    }
+    //    if (_numberCB) {
+    //        _numberCB(audioDecibel);
+    //    }
 }
 
 void updateCalendarData(std::string datestring) {
@@ -571,38 +571,30 @@ void updateCalendarData(std::string datestring) {
 
 
 
-void updateCameraData(uint8_t* pData,int width, int height, long len){
-    //    if(hasRender){
+void updateCameraData(uint8_t* pData,int width, int height, long len) {
+    //    if(!isCollectting){
     //        free(pData);
     //    }
-    if(!isCollectting){
-        free(pData);
-    }
-    std::lock_guard<std::mutex> lck(m_vqMtx);
-    while(m_cameraQueue.size()>CAMERA_CACHE_FRAME) {
-        printf("队列长度超过了，移除部分元素");
-        CameraData cd = std::move(m_cameraQueue.front());
-        CC_SAFE_DELETE_ARRAY(cd.pData);
-//        CC_SAFE_DELETE_ARRAY(cd.pData);
-        m_cameraQueue.pop();
-    }
-    CameraData cd;
-    cd.pData = pData;
-    cd.width=width;
-    cd.height=height;
-    cd.length = len;
-    
-    
-    m_cameraQueue.push(std::move(cd));
-    
-    //    if(cameraData!=nullptr){
-    //        free(cameraData);
-    //        cameraData=nullptr;
+    //    std::lock_guard<std::mutex> lck(m_vqMtx);
+    //    while(m_cameraQueue.size()>CAMERA_CACHE_FRAME) {
+    //        printf("队列长度超过了，移除部分元素");
+    //        CameraData cd = std::move(m_cameraQueue.front());
+    //        CC_SAFE_DELETE_ARRAY(cd.pData);
+    //        m_cameraQueue.pop();
     //    }
-    //    cameraData = pData;
-    //    if(_cameraCB){
-    //        printf("88888888888888888888888888888888888\n");
-    //        _cameraCB(pData,width,height,len);
-    //    }
+    //    CameraData cd;
+    //    cd.pData = pData;
+    //    cd.width=width;
+    //    cd.height=height;
+    //    cd.length = len;
+    //    m_cameraQueue.push(std::move(cd));
+    
+    
+    /**
+     * 上层定时器到底层获取数据，数据处理完回调给上层使用
+     */
+    if(_cameraCB){
+        _cameraCB(pData,width,height,len);
+    }
 }
 

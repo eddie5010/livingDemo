@@ -15,7 +15,7 @@
 
 /**
  摄像头采集数据输出
-
+ 
  @param sampleBuffer 采集的数据
  */
 - (void)videoCaptureOutputDataCallback:(CMSampleBufferRef)sampleBuffer;
@@ -46,7 +46,7 @@
 @property (nonatomic, strong) VCVideoCapturerParam *captureParam;
 /**
  初始化方法
-
+ 
  @param param 参数
  @return 实例
  */

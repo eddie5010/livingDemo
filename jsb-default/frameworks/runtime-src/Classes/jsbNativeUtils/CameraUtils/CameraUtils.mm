@@ -13,6 +13,8 @@
 
 #define clamp(a) (a>255?255:(a<0?0:a))
 
+static int CachePixelBuffMax = 3;
+
 @interface CameraUtils ()  <VCVideoCapturerDelegate>
 
 /** 视频采集 */
@@ -22,7 +24,9 @@
 
 @implementation CameraUtils
 {
-    //    CMSampleBufferRef sampleBuffer;
+    NSMutableArray* pixelBufferArray;
+    size_t imageWidth;
+    size_t imageHeight;
 }
 
 + (instancetype)sharedSingleton {
@@ -79,32 +83,81 @@
 
 -(void)stopCamera {
     NSLog(@"停止摄像头信息采集");
+    
+    /**
+     * 清理pixel缓存
+     */
+    [self clearPixelArray];
+    
     [self.videoCapture stopCapture];
     [self.videoCapture.videoPreviewLayer removeFromSuperlayer];
 }
 
+- (void)clearPixelArray {
+    [self->pixelBufferArray removeAllObjects];
+}
+
 -(void)cameraUpdate {
+    
     /**
      * 检测人脸特征数据信息
      */
+    if(!self->pixelBufferArray){
+        NSLog(@"容器不存在");
+        return;
+    }
+    if([self->pixelBufferArray count]<=0){
+        NSLog(@"容器是空的");
+        return;
+    }
+    NSData* firstObj = self->pixelBufferArray[0];
     
-}
-
-#pragma mark - 视频采集回调
-- (void)videoCaptureOutputDataCallback:(CMSampleBufferRef)sampleBuffer
-{
-    NSLog(@"视频采集回调代理方法");
-    //    self->sampleBuffer = sampleBuffer;
-    CFRetain(sampleBuffer);
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    CVPixelBufferLockBaseAddress(imageBuffer,0);
+    CVImageBufferRef imageBuffer = [VisionUtils yuvPixelBufferWithData:firstObj
+                                                                 width:self->imageWidth
+                                                                heigth:self->imageHeight];
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
     
+    //    NSDate *datenow = [NSDate date];//现在时间,你可以输出来看下是什么格式
+    //
+    //    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)([datenow timeIntervalSince1970]*1000)];
+    //    NSLog(@"time stamp 00000: %@", timeSp);
+    
+    /**
+     * 检测人脸特征数据信息
+     */
+    VNDetectFaceRectanglesRequest *detectFaceRequest = [[VisionUtils sharedSingleton] getDetectFaceRequest];
+    VNImageRequestHandler *detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:imageBuffer
+                                                                                                   options:@{}];
+    
+    
+    [detectFaceRequestHandler performRequests:@[detectFaceRequest]
+                                        error:nil];
+    
+    if([detectFaceRequest results]){
+        NSLog(@"鼻子的位置信息为：%lu",[[detectFaceRequest results] count]);
+    }
+    
+    for (VNFaceObservation *faceObservation in [detectFaceRequest results]) {
+        //boundingBox
+        CGRect transFrame = [VisionUtils convertRect:faceObservation.boundingBox
+                                                size:CGSizeMake(self->imageWidth, self->imageHeight)];
+        
+    }
+    
+    /**
+     * 脸部特征信息使用完释放handler
+     */
+    CFRelease(detectFaceRequestHandler);
+    
+    
+    /**
+     * 数据交由上层JS端渲染
+     */
     size_t width = CVPixelBufferGetWidth(imageBuffer);
     size_t height = CVPixelBufferGetHeight(imageBuffer);
-    uint8_t *yBuffer =(uint8_t*) CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
+    uint8_t* yBuffer =(uint8_t*) CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
     size_t yPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
-    uint8_t *cbCrBuffer = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
+    uint8_t* cbCrBuffer = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
     size_t cbCrPitch = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
     
     int bytesPerPixel = 3;
@@ -132,21 +185,46 @@
             //            rgbOutput[3] = 0xff;
         }
     }
-    //        /**
-    //         * 检测人脸特征数据信息
-    //         */
-    //            VNDetectFaceRectanglesRequest *detectFaceRequest = [[VisionUtils sharedSingleton] getDetectFaceRequest];
-    //            VNImageRequestHandler *detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:imageBuffer
-    //                                                                                                           options:@{}];
-    //            [detectFaceRequestHandler performRequests:@[detectFaceRequest]
-    //                                                error:nil];
     
     /// 输出数据
     updateCameraData(rgbBuffer, (int)width, (int)height, (long)width*height*bytesPerPixel);
+    free(rgbBuffer);
+    
+    
+    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    CFRelease(imageBuffer);
+    
+    [self->pixelBufferArray removeObjectAtIndex:0];
+    firstObj=nil;
+    
+    NSLog(@"缓存数据长度1111：%lu",[self->pixelBufferArray count]);
+}
+
+#pragma mark - 视频采集回调
+- (void)videoCaptureOutputDataCallback:(CMSampleBufferRef)sampleBuffer
+{
+    if(!self->pixelBufferArray){
+        self->pixelBufferArray=[[NSMutableArray alloc] initWithCapacity:0];
+    }
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CVPixelBufferLockBaseAddress(imageBuffer,0);
+    
+    self->imageWidth = CVPixelBufferGetWidth(imageBuffer);
+    self->imageHeight = CVPixelBufferGetHeight(imageBuffer);
+    
+    /**
+     * 如果容器缓存超过预设帧数，则将较早缓存的数据释放
+     */
+    while ([self->pixelBufferArray count] >= CachePixelBuffMax) {
+        [self->pixelBufferArray removeObjectAtIndex:0];
+    }
+    
+    [self->pixelBufferArray addObject:[VisionUtils dataWithYUVPixelBuffer:imageBuffer]];
+    
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
     
-    CFRelease(sampleBuffer);
-    //});
+    
+    NSLog(@"容器长度为：%lu",[self->pixelBufferArray count]);
 }
 
 

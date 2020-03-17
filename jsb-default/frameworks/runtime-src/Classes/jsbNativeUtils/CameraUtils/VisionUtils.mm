@@ -10,6 +10,8 @@
 
 @implementation VisionModel
 
+static OSType KVideoPixelFormatType = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
+
 - (NSMutableArray*)allPoints{
     if (!_allPoints) {
         _allPoints = [NSMutableArray array];
@@ -43,19 +45,19 @@
 - (VNDetectFaceRectanglesRequest *)getDetectFaceRequest {
     if (!self.detectFaceRequest) {
         self.detectFaceRequest = [[VNDetectFaceRectanglesRequest alloc] initWithCompletionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
-            NSLog(@"获取到的人脸特征数据 count: %d",request.results.count);
+            //            NSLog(@"获取到的人脸特征数据 count: %lu",(unsigned long)request.results.count);
         }];
     }
     return self.detectFaceRequest;
 }
 
-- (VNImageRequestHandler *)getDetectFaceRequestHandler {
-    if (!self.detectFaceRequestHandler) {
-//        self.detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithData:nullptr
-//                                                                            options:nullptr];
-    }
-    return self.detectFaceRequestHandler;
-}
+//- (VNImageRequestHandler *)getDetectFaceRequestHandler {
+//    if (!self.detectFaceRequestHandler) {
+////        self.detectFaceRequestHandler = [[VNImageRequestHandler alloc] initWithData:nullptr
+////                                                                            options:nullptr];
+//    }
+//    return self.detectFaceRequestHandler;
+//}
 
 
 
@@ -119,7 +121,8 @@ static VisionDatasBlock _xxblock = nil;
         CGSize imageSize = CGSizeMake(width, height);
         NSMutableArray *temps = [NSMutableArray array];
         for (VNFaceObservation *observation in request.results) {
-            NSValue *ractValue = [NSValue valueWithCGRect:convertRect(observation.boundingBox, imageSize)];
+            NSValue *ractValue = [NSValue valueWithCGRect:[VisionUtils convertRect:observation.boundingBox
+                                                                              size:imageSize]];
             [temps addObject:ractValue];
         }
         temps;
@@ -157,7 +160,7 @@ static VisionDatasBlock _xxblock = nil;
 
 
 #pragma mark - 内部方法
-static inline CGRect convertRect(CGRect rect, CGSize size){
++ (CGRect)convertRect:(CGRect)rect size:(CGSize)size {
     CGFloat w = rect.size.width * size.width;
     CGFloat h = rect.size.height * size.height;
     CGFloat x = rect.origin.x * size.width;
@@ -223,5 +226,96 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
         _xxblock(detectFaceRequest.results);
     }
 }
+
+
+#pragma mark - NSData CVImageBufferRef 互转辅助函数
+
+
++ (CVPixelBufferRef)yuvPixelBufferWithData:(NSData *)dataFrame
+                                     width:(size_t)w
+                                    heigth:(size_t)h
+{
+    unsigned char* buffer = (unsigned char*) dataFrame.bytes;
+    CVPixelBufferRef getCroppedPixelBuffer = [self copyDataFromBuffer:buffer
+                                            toYUVPixelBufferWithWidth:w
+                                                               Height:h];
+    return getCroppedPixelBuffer;
+}
+
++ (CVPixelBufferRef) copyDataFromBuffer:(const unsigned char*)buffer
+              toYUVPixelBufferWithWidth:(size_t)w
+                                 Height:(size_t)h
+{
+    NSDictionary *pixelBufferAttributes = [NSDictionary dictionaryWithObjectsAndKeys:nil];
+    
+    CVPixelBufferRef pixelBuffer;
+    CVPixelBufferCreate(NULL, w, h, KVideoPixelFormatType, (__bridge CFDictionaryRef)(pixelBufferAttributes), &pixelBuffer);
+    
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    
+    size_t d = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+    const unsigned char* src = buffer;
+    unsigned char* dst = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+    
+    for (unsigned int rIdx = 0; rIdx < h; ++rIdx, dst += d, src += w) {
+        memcpy(dst, src, w);
+    }
+    
+    d = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1);
+    dst = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
+    h = h >> 1;
+    for (unsigned int rIdx = 0; rIdx < h; ++rIdx, dst += d, src += w) {
+        memcpy(dst, src, w);
+    }
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    return pixelBuffer;
+    
+}
+
++ (NSData *)dataWithYUVPixelBuffer:(CVPixelBufferRef)pixelBuffer
+{
+    size_t width = CVPixelBufferGetWidth(pixelBuffer);
+    size_t height  = CVPixelBufferGetHeight(pixelBuffer);
+    unsigned char* buffer = (unsigned char*) malloc(width * height * 1.5);
+    // 取视频YUV数据
+    [self copyDataFromYUVPixelBuffer:pixelBuffer toBuffer:buffer];
+    // 保存到本地
+    NSData *retData = [NSData dataWithBytes:buffer
+                                     length:sizeof(unsigned char)*(width*height*1.5)];
+    free(buffer);
+    buffer = nil;
+    return retData;
+}
+
+//the size of buffer has to be width * height * 1.5 (yuv)
++ (void) copyDataFromYUVPixelBuffer:(CVPixelBufferRef)pixelBuffer
+                           toBuffer:(unsigned char*)buffer {
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    if (CVPixelBufferIsPlanar(pixelBuffer)) {
+        size_t w = CVPixelBufferGetWidth(pixelBuffer);
+        size_t h = CVPixelBufferGetHeight(pixelBuffer);
+        
+        size_t d = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+        unsigned char* src = (unsigned char*) CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+        unsigned char* dst = buffer;
+        
+        for (unsigned int rIdx = 0; rIdx < h; ++rIdx, dst += w, src += d) {
+            memcpy(dst, src, w);
+        }
+        
+        d = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1);
+        src = (unsigned char *) CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
+        
+        h = h >> 1;
+        for (unsigned int rIdx = 0; rIdx < h; ++rIdx, dst += w, src += d) {
+            memcpy(dst, src, w);
+        }
+    }
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+}
+
+
 
 @end
