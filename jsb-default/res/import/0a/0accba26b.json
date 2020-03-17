@@ -1,0 +1,244 @@
+[
+  [
+    {
+      "__type__": "cc.Prefab",
+      "_name": "coin",
+      "data": {
+        "__id__": 1
+      }
+    },
+    {
+      "__type__": "cc.Node",
+      "_name": "coin",
+      "_components": [
+        {
+          "__type__": "cc.Sprite",
+          "node": {
+            "__id__": 1
+          },
+          "_materials": [
+            {
+              "__uuid__": "ecpdLyjvZBwrvm+cedCcQy"
+            }
+          ],
+          "_spriteFrame": {
+            "__uuid__": "55FoeyRe9CaLRZAsTO91pZ"
+          },
+          "_sizeMode": 0
+        },
+        {
+          "__type__": "cc.RigidBody",
+          "node": {
+            "__id__": 1
+          },
+          "_type": 0
+        },
+        {
+          "__type__": "cc.PhysicsPolygonCollider",
+          "node": {
+            "__id__": 1
+          },
+          "_sensor": true,
+          "points": [
+            {
+              "__type__": "cc.Vec2",
+              "x": -7,
+              "y": 100
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -17,
+              "y": 95
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -24,
+              "y": 88
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -24,
+              "y": 86
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -26,
+              "y": 85
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -31,
+              "y": 76
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -34,
+              "y": 67
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -35,
+              "y": 38
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -31,
+              "y": 24
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -27,
+              "y": 16
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -17,
+              "y": 5
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": -10,
+              "y": 1
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 8
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 16,
+              "y": 4
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 25,
+              "y": 13
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 32,
+              "y": 26
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 35,
+              "y": 37
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 35,
+              "y": 63
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 32,
+              "y": 74
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 27,
+              "y": 84
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 17,
+              "y": 95
+            },
+            {
+              "__type__": "cc.Vec2",
+              "x": 10,
+              "y": 99
+            }
+          ]
+        },
+        {
+          "__type__": "5181e+7ALxBlLJJB4Rb4wHF",
+          "node": {
+            "__id__": 1
+          }
+        },
+        {
+          "__type__": "cc.Animation",
+          "node": {
+            "__id__": 1
+          },
+          "_defaultClip": {
+            "__uuid__": "4cmfV/Jx9D44Ww+fsSDXrQ"
+          },
+          "_clips": [
+            {
+              "__uuid__": "4cmfV/Jx9D44Ww+fsSDXrQ"
+            }
+          ]
+        }
+      ],
+      "_prefab": {
+        "__type__": "cc.PrefabInfo",
+        "root": {
+          "__id__": 1
+        },
+        "asset": {
+          "__uuid__": "53yhN1KmtAzLmJnxRbao+z"
+        },
+        "fileId": "7fI/mpTTFBmK1Hsl1fSVnX"
+      },
+      "_color": {
+        "__type__": "cc.Color",
+        "r": 255,
+        "g": 255
+      },
+      "_contentSize": {
+        "__type__": "cc.Size",
+        "width": 70,
+        "height": 100
+      },
+      "_anchorPoint": {
+        "__type__": "cc.Vec2",
+        "x": 0.5
+      },
+      "_trs": {
+        "__type__": "TypedArray",
+        "ctor": "Float64Array",
+        "array": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "coin",
+      "texture": "1316P7to1F3IF36szlyeRo",
+      "rect": [
+        0,
+        0,
+        70,
+        100
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "originalSize": [
+        70,
+        100
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]

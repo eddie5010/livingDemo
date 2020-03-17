@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "coinAni",
+  "_duration": 0.7166666666666667,
+  "wrapMode": 2,
+  "curveData": {
+    "props": {
+      "scale": [
+        {
+          "frame": 0,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 0.1934917632,
+            "y": 1
+          }
+        },
+        {
+          "frame": 0.35,
+          "value": {
+            "__type__": "cc.Vec2",
+            "y": 1
+          }
+        },
+        {
+          "frame": 0.6833333333333333,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 1,
+            "y": 1
+          }
+        },
+        {
+          "frame": 0.7166666666666667,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 1,
+            "y": 1
+          }
+        }
+      ]
+    }
+  }
+}

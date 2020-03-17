@@ -1,0 +1,119 @@
+[
+  [
+    {
+      "__type__": "cc.Prefab",
+      "_name": "ground",
+      "data": {
+        "__id__": 1
+      }
+    },
+    {
+      "__type__": "cc.Node",
+      "_name": "ground",
+      "_components": [
+        {
+          "__type__": "cc.Sprite",
+          "node": {
+            "__id__": 1
+          },
+          "_materials": [
+            {
+              "__uuid__": "ecpdLyjvZBwrvm+cedCcQy"
+            }
+          ],
+          "_spriteFrame": {
+            "__uuid__": "b1+2okz+tK8qAWj6uTyv80"
+          },
+          "_type": 2,
+          "_sizeMode": 0
+        },
+        {
+          "__type__": "cc.RigidBody",
+          "node": {
+            "__id__": 1
+          },
+          "_type": 0,
+          "bullet": true
+        },
+        {
+          "__type__": "cc.PhysicsBoxCollider",
+          "node": {
+            "__id__": 1
+          },
+          "_friction": 0.5,
+          "_offset": {
+            "__type__": "cc.Vec2",
+            "x": 45,
+            "y": 75
+          },
+          "_size": {
+            "__type__": "cc.Size",
+            "width": 90,
+            "height": 150
+          }
+        }
+      ],
+      "_prefab": {
+        "__type__": "cc.PrefabInfo",
+        "root": {
+          "__id__": 1
+        },
+        "asset": {
+          "__uuid__": "a7wRte2gBCy7eysqXm1tb1"
+        },
+        "fileId": "37BSbQvvVEtpGWReoQRxwF"
+      },
+      "_contentSize": {
+        "__type__": "cc.Size",
+        "width": 90,
+        "height": 150
+      },
+      "_anchorPoint": {
+        "__type__": "cc.Vec2"
+      },
+      "_trs": {
+        "__type__": "TypedArray",
+        "ctor": "Float64Array",
+        "array": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "ground",
+      "texture": "acXf6stnFLWqeKBY+UhLSY",
+      "rect": [
+        0,
+        0,
+        90,
+        150
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "originalSize": [
+        90,
+        150
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]
