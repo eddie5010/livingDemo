@@ -37,6 +37,9 @@ void iOSNativeUtilsHelper::stopCamera(){
     [[CameraUtils sharedSingleton] stopCamera];
 }
 
+void iOSNativeUtilsHelper::cameraUpdate() {
+    [[CameraUtils sharedSingleton] cameraUpdate];
+}
 
 void iOSNativeUtilsHelper::openNativeCalendar(std::string lastBirth) {
 //void iOSNativeUtilsHelper::openNativeCalendar(std::string lastBirth) {

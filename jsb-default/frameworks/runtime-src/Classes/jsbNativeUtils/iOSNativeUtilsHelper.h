@@ -25,6 +25,7 @@ public:
     
     static void liveCamera();
     static void stopCamera();
+    static void cameraUpdate();
     
     static void openNativeCalendar(std::string lastBirth);
     static void closeNativeCalendar();

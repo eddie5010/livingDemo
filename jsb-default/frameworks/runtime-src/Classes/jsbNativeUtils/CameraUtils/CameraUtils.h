@@ -18,6 +18,7 @@
 -(BOOL)isCameraAllow;
 -(void)liveCamera;
 -(void)stopCamera;
+-(void)cameraUpdate;
 
 @end
 
